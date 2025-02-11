@@ -110,6 +110,18 @@ setInterval(fetchBeamData, 5000);
 
 // Run on page load
 fetchBeamData();
+async function fetchBeamStatus() {
+    const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec");
+    const data = await response.json();
+
+    data.forEach(beam => {
+        if (beam.Scanned === "TRUE") {
+            document.querySelector(`[data-name='${beam.Beam_Name}']`).classList.add("selected");
+        }
+    });
+}
+
+setInterval(fetchBeamStatus, 5000); // Refresh every 5 seconds
 
 
 </script>
