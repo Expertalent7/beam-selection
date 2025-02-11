@@ -47,13 +47,16 @@
 <script>
 async function fetchBeamStatus() {
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwWTCyAUQHF2sGnWkYOEZDTKq4ns5jvPhrk1hFcWQ7jEZoxLt7DZVwapotxJPXmTLpe_w/exec");
+        console.log("Fetching beam status...");
+
+        // Replace with your Google Apps Script Web App URL
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzi_vNcfZRls3Cg2JJw8p-wFG2l8Pelkd5_ZbLZhhfug19METGlACp9ZH0TE55at5GJqw/exec");
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("Fetched Beam Data:", data);
+        console.log("Fetched Beam Data:", data);  // Debugging log
 
         data.forEach(beam => {
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
@@ -73,7 +76,6 @@ async function fetchBeamStatus() {
 // Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
-
 
 </script>
 
