@@ -48,9 +48,7 @@
 async function fetchBeamStatus() {
     try {
         console.log("Fetching beam status...");
-
-        // Replace with your Google Apps Script Web App URL
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzi_vNcfZRls3Cg2JJw8p-wFG2l8Pelkd5_ZbLZhhfug19METGlACp9ZH0TE55at5GJqw/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyAKiccmwLQfD2rv3AYciHDt12MH0B5lH3EKiodwX517QNove9z0gEWWp_9ZwP_J0H0Bg/exec");
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -60,13 +58,9 @@ async function fetchBeamStatus() {
 
         data.forEach(beam => {
             console.log(`Checking Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
-
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
-            
             if (beamElement) {
-                console.log(`Found Beam Element: ${beam.Beam_Name}`);
-                
-                if (beam.Scanned === true || beam.Scanned === "TRUE" || beam.Scanned === "true") {  
+                if (beam.Scanned) { // Now correctly recognized as a boolean
                     beamElement.classList.add("selected"); // Green if scanned
                 } else {
                     beamElement.classList.remove("selected"); // Default color
@@ -75,17 +69,14 @@ async function fetchBeamStatus() {
                 console.warn(`Beam not found in HTML: ${beam.Beam_Name}`);
             }
         });
-
     } catch (error) {
         console.error("Error fetching beam data:", error);
     }
 }
 
-// Run once on page load
+setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
 
-// Refresh every 5 seconds
-setInterval(fetchBeamStatus, 5000);
 </script>
 
 </body>
