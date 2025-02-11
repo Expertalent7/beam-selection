@@ -47,15 +47,18 @@
 <script>
 async function fetchBeamStatus() {
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyQi73Y5VKC9W8OL8zaPmZrNJdzplkh9bWYwMa2_XzScJBZtM-fnXogumIyKDLrQy2NBA/exec");
-        const data = await response.json();
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwWTCyAUQHF2sGnWkYOEZDTKq4ns5jvPhrk1hFcWQ7jEZoxLt7DZVwapotxJPXmTLpe_w/exec");
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
+        const data = await response.json();
         console.log("Fetched Beam Data:", data);
 
         data.forEach(beam => {
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
             if (beamElement) {
-                if (beam.Scanned === "TRUE" || beam.Scanned === true) {
+                if (beam.Scanned) {
                     beamElement.classList.add("selected"); // Green if scanned
                 } else {
                     beamElement.classList.remove("selected"); // Default color
@@ -67,10 +70,8 @@ async function fetchBeamStatus() {
     }
 }
 
-// Refresh beam status every 5 seconds
+// Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
-
-// Run on page load
 fetchBeamStatus();
 
 
