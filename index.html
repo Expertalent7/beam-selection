@@ -67,20 +67,29 @@ async function fetchBeamStatus() {
         const data = await response.json();
         console.log("Fetched Beam Data:", data);
 
+        let missingBeams = [];
+
         data.forEach(beam => {
+            let beamName = beam.Beam_Name.trim().toLowerCase();  // Trim spaces & convert to lowercase
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name.trim()}"]`);
+
             if (beamElement) {
                 console.log(`Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
-
+                
                 if (beam.Scanned === true || beam.Scanned === "TRUE") { 
                     beamElement.classList.add("selected");
                 } else {
                     beamElement.classList.remove("selected");
                 }
             } else {
-                console.warn(`Beam not found in HTML: ${beam.Beam_Name}`);
+                missingBeams.push(beam.Beam_Name);
             }
         });
+
+        if (missingBeams.length > 0) {
+            console.warn(`Beams not found in HTML:`, missingBeams.join(", "));
+        }
+
     } catch (error) {
         console.error("Error fetching beam data:", error);
     } finally {
@@ -91,6 +100,7 @@ async function fetchBeamStatus() {
 // Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
+
 
 </script>
 
