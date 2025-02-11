@@ -70,57 +70,54 @@
     <div id="beam-info">Click on a beam to see details</div>
     
     <script>
+ <script>
     async function fetchBeamData() {
-    try {
-        console.log("Fetching beam data...");
+        try {
+            console.log("Fetching beam data...");
 
-        const url = "https://api.appsheet.com/api/v2/apps/d1cb907b-e54f-46e3-9072-88d71349012d/tables/Beams/Action";
-        const options = {
-            method: "GET",
-            headers: {
-                "ApplicationAccessKey": "V2-OJZ6d-keM5s-el6fu-a0fgC-VEtVO-iZ6G7-dUs8f-A2Q2u",
-                "Content-Type": "application/json"
-            }
-        };
+            const apiUrl = "https://api.appsheet.com/api/v2/apps/d1cb907b-e54f-46e3-9072-88d71349012d/tables/Beams/rows";
+            const accessKey = "V2-OJZ6d-keM5s-el6fu-a0fgC-VEtVO-iZ6G7-dUs8f-A2Q2u"; 
 
-        const response = await fetch(url, options);
-
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log("Received Data:", data);
-
-        // Check if the response contains "items"
-        if (!data.items || !Array.isArray(data.items)) {
-            console.error("Invalid API response format:", data);
-            return;
-        }
-
-        // Update beam colors based on scan status
-        data.items.forEach(beam => {
-            let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_ID}"]`);
-            if (beamElement) {
-                if (beam["Scanned?"] && beam["Scanned?"].toString().toLowerCase() === "true") {
-                    beamElement.classList.add("selected"); // Green if scanned
-                } else {
-                    beamElement.classList.remove("selected"); // Default color
+            const response = await fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    "ApplicationAccessKey": accessKey,
+                    "Content-Type": "application/json"
                 }
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
             }
-        });
-    } catch (error) {
-        console.error("Error fetching beam data:", error);
+
+            const data = await response.json();
+            console.log("Received Data:", data);
+
+            // Loop through beams and update colors
+            data.items.forEach(beam => {
+                let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
+                if (beamElement) {
+                    if (beam["Scanned"] === "Y") {
+                        beamElement.classList.add("scanned"); // Green if scanned
+                    } else {
+                        beamElement.classList.remove("scanned"); // Default red if not scanned
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching beam data:", error);
+        }
     }
-}
 
-// Refresh data every 10 seconds
-setInterval(fetchBeamData, 10000);
+    // Refresh data every 5 seconds
+    setInterval(fetchBeamData, 5000);
 
-// Run on page load
-fetchBeamData();
-
+    // Run on page load
+    fetchBeamData();
 </script>
+
+
+    </script>
 
 </body>
 </html>
