@@ -70,52 +70,46 @@
     <div id="beam-info">Click on a beam to see details</div>
     
     <script>
- <script>
-    async function fetchBeamData() {
-        try {
-            console.log("Fetching beam data...");
+ async function updateBeamStatus(beamID) {
+    const apiUrl = "https://api.appsheet.com/api/v2/apps/d1cb907b-e54f-46e3-9072-88d71349012d/tables/Beams/Action";
+    const accessKey = "your-access-key-here";
 
-            const apiUrl = "https://api.appsheet.com/api/v2/apps/d1cb907b-e54f-46e3-9072-88d71349012d/tables/Beams/rows";
-            const accessKey = "V2-OJZ6d-keM5s-el6fu-a0fgC-VEtVO-iZ6G7-dUs8f-A2Q2u"; 
-
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: {
-                    "ApplicationAccessKey": accessKey,
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
+    const payload = {
+        "Action": "Edit",
+        "Properties": {
+            "Locale": "en-US",
+            "Timezone": "Pacific Standard Time"
+        },
+        "Rows": [
+            {
+                "Beam_ID": beamID,
+                "Scanned": "TRUE"
             }
+        ]
+    };
 
-            const data = await response.json();
-            console.log("Received Data:", data);
+    try {
+        const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+                "ApplicationAccessKey": accessKey,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-            // Loop through beams and update colors
-            data.items.forEach(beam => {
-                let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
-                if (beamElement) {
-                    if (beam["Scanned"] === "Y") {
-                        beamElement.classList.add("scanned"); // Green if scanned
-                    } else {
-                        beamElement.classList.remove("scanned"); // Default red if not scanned
-                    }
-                }
-            });
-        } catch (error) {
-            console.error("Error fetching beam data:", error);
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log("Beam updated successfully:", data);
+    } catch (error) {
+        console.error("Error updating beam:", error);
     }
+}
 
-    // Refresh data every 5 seconds
-    setInterval(fetchBeamData, 5000);
-
-    // Run on page load
-    fetchBeamData();
-</script>
-
+    
 
     </script>
 
