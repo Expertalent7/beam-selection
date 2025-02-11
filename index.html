@@ -76,7 +76,6 @@
     <div id="statusMessage">Loading beam status...</div>
 
 <script>
-
 async function fetchBeamStatus() {
     document.getElementById("statusMessage").innerText = "Updating beam status...";
     try {
@@ -89,8 +88,11 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            let beamName = beam.Beam_Name.trim().toLowerCase().replace(/\s+/g, "");  // Normalize beam name
-            let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`); // Match normalized HTML
+            // Normalize beam names (remove spaces, lowercase)
+            let beamName = beam.Beam_Name.trim().toLowerCase().replace(/\s+/g, "");
+
+            // Select beam using normalized name
+            let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
                 console.log(`✅ Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
