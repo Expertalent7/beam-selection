@@ -88,10 +88,10 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            // Normalize beam names (remove spaces, lowercase)
-            let beamName = beam.Beam_Name.trim().toLowerCase().replace(/\s+/g, "");
+            // Normalize names (trim spaces, uppercase)
+            let beamName = beam.Beam_Name.trim().toUpperCase();
 
-            // Select beam using normalized name
+            // Select matching beam in HTML
             let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
@@ -121,7 +121,6 @@ async function fetchBeamStatus() {
 // Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
-
 
 </script>
 
