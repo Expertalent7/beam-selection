@@ -119,8 +119,10 @@ async function fetchBeamStatus() {
 }
 
 // Refresh every 5 seconds
-setInterval(fetchBeamStatus, 5000);
-fetchBeamStatus();
+window.onload = function() {
+    fetchBeamStatus();
+    setInterval(fetchBeamStatus, 5000);
+};
 
 
 </script>
