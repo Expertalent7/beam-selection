@@ -88,10 +88,10 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            // Convert API beam name to uppercase
+            // Normalize beam name (API → Uppercase, HTML → Uppercase)
             let beamName = beam.Beam_Name.trim().toUpperCase();
 
-            // Select matching beam in HTML
+            // Select matching beam in HTML (forcing uppercase)
             let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
@@ -118,7 +118,7 @@ async function fetchBeamStatus() {
     }
 }
 
-// Refresh every 5 seconds
+// Ensure script runs AFTER HTML is loaded
 window.onload = function() {
     fetchBeamStatus();
     setInterval(fetchBeamStatus, 5000);
