@@ -47,34 +47,33 @@
 
     
 <script>
-async function fetchBeamStatus() {
-    try {
-        console.log("Fetching beam status...");
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyAKiccmwLQfD2rv3AYciHDt12MH0B5lH3EKiodwX517QNove9z0gEWWp_9ZwP_J0H0Bg/exec");
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
 
+async function fetchBeamStatus() {
+    document.getElementById("statusMessage").innerText = "Updating beam status...";
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzq3UhQEdDZmRrMxL7Rw9CoveEqt-1OhWidY6amwq87HP2kCH_rywzghp7xi6pu7SJomw/exec");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
-        console.log("Fetched Beam Data:", data);  // Debugging log
+
+        console.log("Fetched Beam Data:", data);
 
         data.forEach(beam => {
-            console.log(`Checking Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
             if (beamElement) {
-                if (beam.Scanned) { // Now correctly recognized as a boolean
-                    beamElement.classList.add("selected"); // Green if scanned
+                if (beam.Scanned) {
+                    beamElement.classList.add("selected");
                 } else {
-                    beamElement.classList.remove("selected"); // Default color
+                    beamElement.classList.remove("selected");
                 }
-            } else {
-                console.warn(`Beam not found in HTML: ${beam.Beam_Name}`);
             }
         });
     } catch (error) {
         console.error("Error fetching beam data:", error);
+    } finally {
+        document.getElementById("statusMessage").innerText = "Beam status updated!";
     }
 }
+
 
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
