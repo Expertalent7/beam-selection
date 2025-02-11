@@ -59,24 +59,33 @@ async function fetchBeamStatus() {
         console.log("Fetched Beam Data:", data);  // Debugging log
 
         data.forEach(beam => {
+            console.log(`Checking Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
+
             let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_Name}"]`);
+            
             if (beamElement) {
-                if (beam.Scanned) {
+                console.log(`Found Beam Element: ${beam.Beam_Name}`);
+                
+                if (beam.Scanned === true || beam.Scanned === "TRUE" || beam.Scanned === "true") {  
                     beamElement.classList.add("selected"); // Green if scanned
                 } else {
                     beamElement.classList.remove("selected"); // Default color
                 }
+            } else {
+                console.warn(`Beam not found in HTML: ${beam.Beam_Name}`);
             }
         });
+
     } catch (error) {
         console.error("Error fetching beam data:", error);
     }
 }
 
-// Refresh every 5 seconds
-setInterval(fetchBeamStatus, 5000);
+// Run once on page load
 fetchBeamStatus();
 
+// Refresh every 5 seconds
+setInterval(fetchBeamStatus, 5000);
 </script>
 
 </body>
