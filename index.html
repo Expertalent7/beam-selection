@@ -70,27 +70,33 @@
     <div id="beam-info">Click on a beam to see details</div>
     
     <script>
-        // Function to fetch live data from AppSheet
-        async function fetchBeamData() {
-            try {
-                const response = await fetch("https://api.appsheet.com/api/v2/apps/YOUR_APP_ID/tables/Beams/rows");
-                const data = await response.json();
+    async function fetchBeamData() {
+        try {
+            // Replace 'YOUR_APP_ID' with your actual AppSheet App ID
+            const response = await fetch("https://api.appsheet.com/api/v2/apps/YOUR_APP_ID/tables/Beams/rows");
+            const data = await response.json();
 
-                // Loop through beams and update their colors if scanned
-                data.items.forEach(beam => {
-                    let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_ID}"]`);
-                    if (beamElement && beam["Scanned?"]) {
+            // Loop through beams and update their colors if scanned
+            data.items.forEach(beam => {
+                let beamElement = document.querySelector(`.beam[data-name="${beam.Beam_ID}"]`);
+                if (beamElement) {
+                    if (beam["Scanned?"]) {
                         beamElement.classList.add("selected"); // Mark as green
+                    } else {
+                        beamElement.classList.remove("selected"); // Remove green if not scanned
                     }
-                });
-            } catch (error) {
-                console.error("Error fetching beam data:", error);
-            }
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching beam data:", error);
         }
+    }
 
-        // Refresh beam data every 5 seconds
-        setInterval(fetchBeamData, 5000);
-    </script>
+    // Refresh beam data every 5 seconds
+    setInterval(fetchBeamData, 5000);
 
+    // Initial fetch on page load
+    fetchBeamData();
+</script>
 </body>
 </html>
