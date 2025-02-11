@@ -88,7 +88,7 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            // Normalize names (trim spaces, uppercase)
+            // Convert API beam name to uppercase
             let beamName = beam.Beam_Name.trim().toUpperCase();
 
             // Select matching beam in HTML
@@ -121,6 +121,7 @@ async function fetchBeamStatus() {
 // Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
+
 
 </script>
 
