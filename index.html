@@ -83,22 +83,17 @@ async function fetchBeamStatus() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         
         const data = await response.json();
-        console.log("📥 API Data:", data);
-
-        // Get all beam names from HTML
-        const htmlBeams = [...document.querySelectorAll(".beam")].map(beam => beam.getAttribute("data-name"));
-        console.log("📌 Beams in HTML:", htmlBeams);
+        console.log("Fetched Beam Data:", data);
 
         let missingBeams = [];
 
         data.forEach(beam => {
-            let beamNameAPI = beam.Beam_Name.trim();  // API name
-            let beamNameFormatted = beamNameAPI.replace(/\s+/g, '').toUpperCase(); // Remove spaces, convert to uppercase
-
-            let beamElement = document.querySelector(`.beam[data-name="${beamNameFormatted}"]`);
+            // Convert both API beam names and HTML data-name to lowercase and trim spaces
+            let beamName = beam.Beam_Name.trim().toLowerCase();
+            let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
-                console.log(`✅ Found: ${beam.Beam_Name} (API) → ${beamNameFormatted} (HTML)`);
+                console.log(`✅ Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
                 
                 if (beam.Scanned === true || beam.Scanned === "TRUE") { 
                     beamElement.classList.add("selected");
@@ -106,12 +101,12 @@ async function fetchBeamStatus() {
                     beamElement.classList.remove("selected");
                 }
             } else {
-                missingBeams.push(beamNameAPI);
+                missingBeams.push(beam.Beam_Name);
             }
         });
 
         if (missingBeams.length > 0) {
-            console.warn(`⚠️ Beams not found in HTML:`, missingBeams);
+            console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
         }
 
     } catch (error) {
@@ -121,12 +116,9 @@ async function fetchBeamStatus() {
     }
 }
 
-// Ensure script runs AFTER HTML is loaded
-window.onload = function() {
-    fetchBeamStatus();
-    setInterval(fetchBeamStatus, 5000);
-};
-
+// Refresh every 5 seconds
+setInterval(fetchBeamStatus, 5000);
+fetchBeamStatus();
 
 </script>
 
