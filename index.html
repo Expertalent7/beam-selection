@@ -92,14 +92,13 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            // Convert API beam name to match HTML
-            let beamName = beam.Beam_Name.trim().toUpperCase(); // Convert to uppercase
+            let beamNameAPI = beam.Beam_Name.trim();  // From API
+            let beamNameHTML = beamNameAPI.toUpperCase(); // Convert API name to match HTML uppercase
 
-            // Find beam in HTML
-            let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
+            let beamElement = document.querySelector(`.beam[data-name="${beamNameHTML}"]`);
 
             if (beamElement) {
-                console.log(`✅ Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
+                console.log(`✅ Found Beam: ${beam.Beam_Name} (API) → ${beamNameHTML} (HTML)`);
                 
                 if (beam.Scanned === true || beam.Scanned === "TRUE") { 
                     beamElement.classList.add("selected");
@@ -107,7 +106,7 @@ async function fetchBeamStatus() {
                     beamElement.classList.remove("selected");
                 }
             } else {
-                missingBeams.push(beamName);
+                missingBeams.push(beamNameHTML);
             }
         });
 
@@ -127,7 +126,6 @@ window.onload = function() {
     fetchBeamStatus();
     setInterval(fetchBeamStatus, 5000);
 };
-
 
 
 </script>
