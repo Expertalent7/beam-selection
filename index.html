@@ -77,14 +77,28 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    fetchBeamStatus(); // Initial fetch
-    setInterval(fetchBeamStatus, 5000); // Refresh progress every 5 seconds
+    ensureElementsExist();
 });
 
-async function fetchBeamStatus() {
-    // ✅ Ensure all required elements exist
+function ensureElementsExist() {
     let statusMessage = document.getElementById("statusMessage");
-    let progressText = document.getElementById("progress"); 
+    let progressText = document.getElementById("progress");
+    let progressBar = document.getElementById("progressBar");
+
+    if (!statusMessage || !progressText || !progressBar) {
+        console.warn("⚠️ Waiting for required elements...");
+        setTimeout(ensureElementsExist, 500); // 🔄 Wait and try again
+        return;
+    }
+
+    console.log("✅ All required elements found. Starting updates...");
+    fetchBeamStatus(); // Initial fetch
+    setInterval(fetchBeamStatus, 5000); // Refresh every 5 seconds
+}
+
+async function fetchBeamStatus() {
+    let statusMessage = document.getElementById("statusMessage");
+    let progressText = document.getElementById("progress");
     let progressBar = document.getElementById("progressBar");
 
     if (!statusMessage || !progressText || !progressBar) {
@@ -143,6 +157,7 @@ async function fetchBeamStatus() {
         statusMessage.innerText = "Beam status updated!";
     }
 }
+
 
 // 🔄 Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
