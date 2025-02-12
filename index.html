@@ -83,7 +83,7 @@ async function fetchBeamStatus() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         
         const data = await response.json();
-        console.log("📥 API Fetched Beam Data:", data);
+        console.log("📥 API Data:", data);
 
         // Get all beam names from HTML
         const htmlBeams = [...document.querySelectorAll(".beam")].map(beam => beam.getAttribute("data-name"));
@@ -92,13 +92,13 @@ async function fetchBeamStatus() {
         let missingBeams = [];
 
         data.forEach(beam => {
-            let beamNameAPI = beam.Beam_Name.trim();  // API name (trimmed)
-            let beamNameHTML = beamNameAPI.toUpperCase(); // Convert API name to uppercase
+            let beamNameAPI = beam.Beam_Name.trim();  // API name
+            let beamNameFormatted = beamNameAPI.replace(/\s+/g, '').toUpperCase(); // Remove spaces, convert to uppercase
 
-            let beamElement = document.querySelector(`.beam[data-name="${beamNameHTML}"]`);
+            let beamElement = document.querySelector(`.beam[data-name="${beamNameFormatted}"]`);
 
             if (beamElement) {
-                console.log(`✅ Found Beam: ${beam.Beam_Name} (API) → ${beamNameHTML} (HTML)`);
+                console.log(`✅ Found: ${beam.Beam_Name} (API) → ${beamNameFormatted} (HTML)`);
                 
                 if (beam.Scanned === true || beam.Scanned === "TRUE") { 
                     beamElement.classList.add("selected");
@@ -111,7 +111,7 @@ async function fetchBeamStatus() {
         });
 
         if (missingBeams.length > 0) {
-            console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
+            console.warn(`⚠️ Beams not found in HTML:`, missingBeams);
         }
 
     } catch (error) {
@@ -126,6 +126,7 @@ window.onload = function() {
     fetchBeamStatus();
     setInterval(fetchBeamStatus, 5000);
 };
+
 
 </script>
 
