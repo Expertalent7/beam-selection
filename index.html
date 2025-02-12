@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchBeamStatus(); // Initial fetch
     setInterval(fetchBeamStatus, 5000); // Refresh progress every 5 seconds
 });
+
 async function fetchBeamStatus() {
     let statusMessage = document.getElementById("statusMessage");
 
@@ -91,7 +92,8 @@ async function fetchBeamStatus() {
     statusMessage.innerText = "Updating beam status...";
 
     try {
-        const response = await fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec", {
+        // ✅ Corrected fetch URL (Remove duplicated part)
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec", {
             method: "GET",
             mode: "cors" // Ensure CORS works properly
         });
@@ -135,6 +137,7 @@ async function fetchBeamStatus() {
 // 🔄 Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
+
 
 
 
