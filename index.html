@@ -79,15 +79,9 @@
 async function fetchBeamStatus() {
     document.getElementById("statusMessage").innerText = "Updating beam status...";
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw5QsiDPjYtP9K_ZI9fp3FJ-U0Seo4_aDFvYOn7RxOYV8urrsW8qbmBWQqOtr6M_7KGew/exec", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
+        
         const data = await response.json();
         console.log("Fetched Beam Data:", data);
 
@@ -99,7 +93,7 @@ async function fetchBeamStatus() {
 
             if (beamElement) {
                 console.log(`✅ Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
-                
+
                 if (beam.Scanned === true || beam.Scanned === "TRUE") { 
                     beamElement.classList.add("selected");
                 } else {
@@ -114,8 +108,8 @@ async function fetchBeamStatus() {
             console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
         }
 
-        // Display progress percentage
-        document.getElementById("progressIndicator").innerText = `Progress: ${data.progress}%`;
+        // ✅ Update progress percentage on page
+        document.getElementById("progressDisplay").innerText = `Progress: ${data.progress}%`;
 
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
@@ -128,8 +122,8 @@ async function fetchBeamStatus() {
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
 
-
 </script>
+	
 <h2 id="progress">Installation Progress: 0%</h2>
 <div style="width: 100%; background-color: #ccc; border-radius: 10px;">
     <div id="progressBar" style="width: 0%; height: 30px; background-color: green; text-align: center; color: white; border-radius: 10px;">
