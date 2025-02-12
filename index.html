@@ -82,12 +82,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function fetchBeamStatus() {
+    // ✅ Ensure elements exist
     let statusMessage = document.getElementById("statusMessage");
     let progressText = document.getElementById("progress"); 
     let progressBar = document.getElementById("progressBar");
 
     if (!statusMessage || !progressText || !progressBar) {
-        console.error("❌ Error: One or more elements (statusMessage, progress, progressBar) not found!");
+        console.error("❌ Error: One or more required elements (statusMessage, progress, progressBar) not found!");
         return;
     }
 
@@ -130,10 +131,10 @@ async function fetchBeamStatus() {
 
         // ✅ Update Progress Percentage
         if (data.progress !== undefined) {
-            let progressValue = parseFloat(data.progress).toFixed(2); // Ensure it is a number
+            let progressValue = parseFloat(data.progress).toFixed(2);
             progressText.innerText = `Installation Progress: ${progressValue}%`;
             progressBar.style.width = `${progressValue}%`;
-            progressBar.innerText = `${progressValue}%`; // Show percentage inside the bar
+            progressBar.innerText = `${progressValue}%`;
         } else {
             console.warn("⚠️ Progress data not found in response!");
         }
@@ -149,6 +150,7 @@ async function fetchBeamStatus() {
 // 🔄 Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
+
 
 </script>
 
