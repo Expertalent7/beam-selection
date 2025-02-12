@@ -112,7 +112,9 @@ async function fetchBeamStatus() {
 
         // 🔥 ✅ Update Beam Colors
         data.beams.forEach(beam => {
-            let beamElement = document.getElementById(beam.Beam_ID.replace(" ", "_")); // Replace spaces in ID if needed
+            // Convert beam ID to match the HTML/SVG ID format
+            let beamElement = document.getElementById(beam.Beam_ID.replace(/\s/g, "_")); // Replace spaces with underscores if needed
+
             if (beamElement) {
                 if (beam.Scanned === true || beam.Scanned === "TRUE") {
                     beamElement.setAttribute("fill", "green"); // ✅ Installed beams turn green
@@ -120,7 +122,7 @@ async function fetchBeamStatus() {
                     beamElement.setAttribute("fill", "red"); // ❌ Not installed beams stay red
                 }
             } else {
-                console.warn(`⚠️ Warning: Beam element ${beam.Beam_ID} not found in HTML!`);
+                console.warn(`⚠️ Warning: Beam element "${beam.Beam_ID}" not found in HTML!`);
             }
         });
 
