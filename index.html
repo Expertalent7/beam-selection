@@ -109,7 +109,9 @@ async function fetchBeamStatus() {
         }
 
         // Update progress bar or text
-        document.getElementById("progress").innerText = `Installation Progress: ${data.progress.toFixed(2)}%`;
+        document.getElementById("progressBar").style.width = `${data.progress}%`;
+	document.getElementById("progressBar").innerText = `${data.progress.toFixed(2)}%`;
+
 
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
@@ -123,6 +125,12 @@ setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
 
 </script>
+<h2 id="progress">Installation Progress: 0%</h2>
+<div style="width: 100%; background-color: #ccc; border-radius: 10px;">
+    <div id="progressBar" style="width: 0%; height: 30px; background-color: green; text-align: center; color: white; border-radius: 10px;">
+        0%
+    </div>
+</div>
 
 </body>
 </html>
