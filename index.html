@@ -110,11 +110,26 @@ async function fetchBeamStatus() {
             progressBar.innerText = `${data.progress}%`;
         }
 
+        // 🔥 ✅ Update Beam Colors
+        data.beams.forEach(beam => {
+            let beamElement = document.getElementById(beam.Beam_ID.replace(" ", "_")); // Replace spaces in ID if needed
+            if (beamElement) {
+                if (beam.Scanned === true || beam.Scanned === "TRUE") {
+                    beamElement.setAttribute("fill", "green"); // ✅ Installed beams turn green
+                } else {
+                    beamElement.setAttribute("fill", "red"); // ❌ Not installed beams stay red
+                }
+            } else {
+                console.warn(`⚠️ Warning: Beam element ${beam.Beam_ID} not found in HTML!`);
+            }
+        });
+
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
         progressElement.innerText = "Error loading beam status.";
     }
 }
+
 </script>
 
 <!-- ✅ Fixed the ID name from 'progress' to 'progressDisplay' -->
