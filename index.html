@@ -79,17 +79,16 @@
 async function fetchBeamStatus() {
     document.getElementById("statusMessage").innerText = "Updating beam status...";
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycby-ZgZqyGTWtz6YY3JZa5E6QPxCn96g_0yWJI5-HPddLEojQbYvn7L39EXumQAECyIf9A/exec");
+        const response = await fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwxGPVcfIWSThdNFuZ6dvbbirU3odkKXUJVOHqSNUmfytStCAuGsPC6XfFO3Io5oHdtVQ/exec/exec"); // Replace with your script URL
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        
+
         const data = await response.json();
         console.log("Fetched Beam Data:", data);
 
         let missingBeams = [];
 
-        data.forEach(beam => {
-            // Convert both API beam names and HTML data-name to lowercase and trim spaces
-            let beamName = beam.Beam_Name.trim().toLowerCase(); 
+        data.beams.forEach(beam => {
+            let beamName = beam.Beam_Name.trim();  // Trim spaces
             let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
@@ -109,6 +108,9 @@ async function fetchBeamStatus() {
             console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
         }
 
+        // Update progress bar or text
+        document.getElementById("progress").innerText = `Installation Progress: ${data.progress.toFixed(2)}%`;
+
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
     } finally {
@@ -119,8 +121,6 @@ async function fetchBeamStatus() {
 // Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
-
-
 
 </script>
 
