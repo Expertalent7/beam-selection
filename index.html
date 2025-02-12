@@ -87,13 +87,13 @@ function ensureElementsExist() {
 
     if (!statusMessage || !progressText || !progressBar) {
         console.warn("⚠️ Waiting for required elements...");
-        setTimeout(ensureElementsExist, 500); // 🔄 Wait and try again
+        setTimeout(ensureElementsExist, 500); // 🔄 Wait and check again in 500ms
         return;
     }
 
     console.log("✅ All required elements found. Starting updates...");
     fetchBeamStatus(); // Initial fetch
-    setInterval(fetchBeamStatus, 5000); // Refresh every 5 seconds
+    setInterval(fetchBeamStatus, 5000); // Refresh progress every 5 seconds
 }
 
 async function fetchBeamStatus() {
