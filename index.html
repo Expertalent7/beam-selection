@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchBeamStatus(); // Initial fetch
     setInterval(fetchBeamStatus, 5000); // Refresh progress every 5 seconds
 });
-
 async function fetchBeamStatus() {
     let statusMessage = document.getElementById("statusMessage");
 
@@ -92,7 +91,11 @@ async function fetchBeamStatus() {
     statusMessage.innerText = "Updating beam status...";
 
     try {
-        const response = await fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec");
+        const response = await fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec/exec", {
+            method: "GET",
+            mode: "cors" // Ensure CORS works properly
+        });
+
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
@@ -100,15 +103,13 @@ async function fetchBeamStatus() {
 
         let missingBeams = [];
 
-        data.forEach(beam => {
-            // Normalize the beam name (trim spaces and convert to lowercase)
+        data.beams.forEach(beam => {
             let beamName = beam.Beam_Name.trim().toLowerCase();
             let beamElement = document.querySelector(`.beam[data-name="${beamName}"]`);
 
             if (beamElement) {
                 console.log(`✅ Updating Beam: ${beam.Beam_Name}, Scanned: ${beam.Scanned}`);
-
-                // ✅ If the beam is scanned, mark it as installed (green)
+                
                 if (beam.Scanned === true || beam.Scanned === "TRUE") {
                     beamElement.classList.add("selected");
                 } else {
@@ -119,7 +120,6 @@ async function fetchBeamStatus() {
             }
         });
 
-        // 🚨 Log missing beams only if there are any
         if (missingBeams.length > 0) {
             console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
         }
@@ -135,6 +135,7 @@ async function fetchBeamStatus() {
 // 🔄 Refresh every 5 seconds
 setInterval(fetchBeamStatus, 5000);
 fetchBeamStatus();
+
 
 
 </script>
