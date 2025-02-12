@@ -77,11 +77,17 @@
 
 <script>
 async function fetchBeamStatus() {
-    document.getElementById("statusMessage").innerText = "Updating beam status...";
+    let statusElement = document.getElementById("statusMessage");
+    let progressElement = document.getElementById("progressDisplay");
+
+    if (statusElement) {
+        statusElement.innerText = "Updating beam status...";
+    }
+
     try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbzbWJwW1O5-zVWl74YohX7nDqCWZk9zncL4StAsUfAE82aU1Jh-woCUBFhOJ5i39Ysz1g/exec");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        
+
         const data = await response.json();
         console.log("Fetched Beam Data:", data);
 
@@ -108,13 +114,17 @@ async function fetchBeamStatus() {
             console.warn(`⚠️ Beams not found in HTML:`, missingBeams.join(", "));
         }
 
-        // ✅ Update progress percentage on page
-        document.getElementById("progressDisplay").innerText = `Progress: ${data.progress}%`;
+        // ✅ Update progress percentage safely
+        if (progressElement) {
+            progressElement.innerText = `Progress: ${data.progress}%`;
+        }
 
     } catch (error) {
         console.error("❌ Error fetching beam data:", error);
     } finally {
-        document.getElementById("statusMessage").innerText = "Beam status updated!";
+        if (statusElement) {
+            statusElement.innerText = "Beam status updated!";
+        }
     }
 }
 
